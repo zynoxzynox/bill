@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分帳計算器</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7C3AED;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --light: #1F2937;
+            --dark: #111827;
+            --gray: #6B7280;
+            --card-bg: #1F2937;
+            --input-bg: #374151;
+            --gradient: linear-gradient(135deg, #7C3AED 0%, #10B981 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: #F3F4F6;
+            line-height: 1.6;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px;
+            background: var(--gradient);
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .header:hover {
+            transform: translateY(-5px);
+        }
+
+        .header h1 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 3em;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            color: #F3F4F6;
+            font-weight: 500;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--gray);
+            border-radius: 12px;
+            font-size: 1em;
+            background: var(--input-bg);
+            color: #F3F4F6;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 10px 15px;
+            font-size: 1em;
+        }
+
+        .participant-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .participant-tag {
+            background: var(--input-bg);
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1em;
+            border: 2px solid var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .participant-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 25px;
+            font-size: 1em;
+            background: var(--input-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        th {
+            background: var(--dark);
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1em;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tr:hover {
+            background: var(--dark);
+            transform: scale(1.01);
+        }
+
+        .settlement-item {
+            background: var(--input-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .settlement-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .positive {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .negative {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .summary-card {
+            background: var(--input-bg);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .summary-amount {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin: 15px 0;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card, .header, .summary-card, .settlement-item {
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-receipt"></i> 分帳計算器</h1>
+            <p>公平分攤朋友間的開支</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-users"></i> 新增人員</h2>
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-user"></i> 姓名</label>
+                    <input type="text" id="name" placeholder="請輸入姓名">
+                </div>
+                <button class="btn btn-primary" id="addPerson">
+                    <i class="fas fa-plus"></i> 新增人員
+                </button>
+                <div class="participant-list" id="peopleList"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-money-bill-wave"></i> 新增支出</h2>
+                <div class="form-group">
+                    <label for="payer"><i class="fas fa-user-circle"></i> 付款人</label>
+                    <select id="payer">
+                        <option value="">選擇付款人</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amount"><i class="fas fa-yen-sign"></i> 金額 (人民幣)</label>
+                    <input type="number" id="amount" placeholder="請輸入金額">
+                </div>
+                <div class="form-group">
+                    <label for="description">描述</label>
+                    <input type="text" id="description" placeholder="用於什麼項目？">
+                </div>
+                <div class="form-group">
+                    <label for="recipient">受益人</label>
+                    <select id="recipient">
+                        <option value="">選擇受益人</option>
+                    </select>
+                </div>
+                <button class="btn btn-success" id="addExpense">新增支出</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">支出明細</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>付款人</th>
+                        <th>金額</th>
+                        <th>描述</th>
+                        <th>受益人</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="expensesList"></tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">結算</h2>
+            <button class="btn btn-primary" id="calculate">計算結算金額</button>
+            <div id="summary"></div>
+            <div id="settlements"></div>
+        </div>
+    </div>
+
+    <script>
+        let people = [];
+        let expenses = [];
+
+        // DOM Elements
+        const nameInput = document.getElementById('name');
+        const addPersonBtn = document.getElementById('addPerson');
+        const peopleList = document.getElementById('peopleList');
+        const payerSelect = document.getElementById('payer');
+        const recipientSelect = document.getElementById('recipient');
+        const amountInput = document.getElementById('amount');
+        const descriptionInput = document.getElementById('description');
+        const addExpenseBtn = document.getElementById('addExpense');
+        const expensesList = document.getElementById('expensesList');
+        const calculateBtn = document.getElementById('calculate');
+        const summaryDiv = document.getElementById('summary');
+        const settlementsDiv = document.getElementById('settlements');
+
+        // Event Listeners
+        addPersonBtn.addEventListener('click', addPerson);
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addPerson();
+        });
+        addExpenseBtn.addEventListener('click', addExpense);
+        calculateBtn.addEventListener('click', calculateSettlements);
+
+        function addPerson() {
+            const name = nameInput.value.trim();
+            if (name && !people.includes(name)) {
+                people.push(name);
+                updatePeopleList();
+                updateSelects();
+                nameInput.value = '';
+            }
+        }
+
+        function removePerson(name) {
+            people = people.filter(p => p !== name);
+            expenses = expenses.filter(e => e.payer !== name && e.recipient !== name);
+            updatePeopleList();
+            updateSelects();
+            updateExpensesList();
+        }
+
+        function updatePeopleList() {
+            peopleList.innerHTML = people.map(name => `
+                <div class="participant-tag">
+                    ${name}
+                    <button class="btn btn-danger" onclick="removePerson('${name}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        function updateSelects() {
+            const options = people.map(name => `<option value="${name}">${name}</option>`).join('');
+            payerSelect.innerHTML = '<option value="">選擇付款人</option>' + options;
+            recipientSelect.innerHTML = '<option value="">選擇受益人</option>' + options + '<option value="Everyone">所有人</option>';
+        }
+
+        function addExpense() {
+            const payer = payerSelect.value;
+            const amount = parseFloat(amountInput.value);
+            const description = descriptionInput.value.trim();
+            const recipient = recipientSelect.value;
+
+            if (!payer || isNaN(amount) || amount <= 0 || !description || !recipient) {
+                alert('請正確填寫所有欄位');
+                return;
+            }
+
+            expenses.push({ payer, amount, description, recipient });
+            updateExpensesList();
+
+            // Clear inputs
+            payerSelect.value = '';
+            amountInput.value = '';
+            descriptionInput.value = '';
+            recipientSelect.value = '';
+        }
+
+        function removeExpense(index) {
+            expenses.splice(index, 1);
+            updateExpensesList();
+        }
+
+        function updateExpensesList() {
+            if (expenses.length === 0) {
+                expensesList.innerHTML = '<tr><td colspan="5" style="text-align: center">尚無支出記錄</td></tr>';
+                return;
+            }
+
+            expensesList.innerHTML = expenses.map((expense, index) => `
+                <tr>
+                    <td>${expense.payer}</td>
+                    <td>¥${expense.amount.toFixed(2)}</td>
+                    <td>${expense.description}</td>
+                    <td>${expense.recipient}</td>
+                    <td><button class="btn btn-danger" onclick="removeExpense(${index})">×</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function calculateSettlements() {
+            if (people.length === 0 || expenses.length === 0) {
+                alert('請先新增人員和支出');
+                return;
+            }
+
+            // Calculate total spent by each person
+            const totalSpent = {};
+            people.forEach(person => totalSpent[person] = 0);
+
+            expenses.forEach(expense => {
+                totalSpent[expense.payer] += expense.amount;
+            });
+
+            // Calculate how much each person should pay
+            const shouldPay = {};
+            people.forEach(person => shouldPay[person] = 0);
+
+            expenses.forEach(expense => {
+                if (expense.recipient === 'Everyone') {
+                    const share = expense.amount / people.length;
+                    people.forEach(person => shouldPay[person] += share);
+                } else {
+                    shouldPay[expense.recipient] += expense.amount;
+                }
+            });
+
+            // Calculate final balances
+            const balances = {};
+            people.forEach(person => {
+                balances[person] = totalSpent[person] - shouldPay[person];
+            });
+
+            // Display summary
+            summaryDiv.innerHTML = `
+                <div class="summary-grid">
+                    ${people.map(person => `
+                        <div class="summary-card">
+                            <div>${person}</div>
+                            <div class="summary-amount ${balances[person] > 0 ? 'positive' : balances[person] < 0 ? 'negative' : ''}">
+                                ${balances[person] > 0 ? '+' : ''}¥${balances[person].toFixed(2)}
+                            </div>
+                            <div>${balances[person] > 0 ? '應收回' : balances[person] < 0 ? '應支付' : '已結清'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Calculate settlements
+            const debtors = people.filter(p => balances[p] < -0.01).map(p => ({
+                name: p,
+                amount: -balances[p]
+            })).sort((a, b) => b.amount - a.amount);
+
+            const creditors = people.filter(p => balances[p] > 0.01).map(p => ({
+                name: p,
+                amount: balances[p]
+            })).sort((a, b) => b.amount - a.amount);
+
+            const settlements = [];
+            for (const debtor of debtors) {
+                let remainingDebt = debtor.amount;
+                for (const creditor of creditors) {
+                    if (remainingDebt > 0 && creditor.amount > 0) {
+                        const amount = Math.min(remainingDebt, creditor.amount);
+                        settlements.push({
+                            from: debtor.name,
+                            to: creditor.name,
+                            amount
+                        });
+                        remainingDebt -= amount;
+                        creditor.amount -= amount;
+                    }
+                }
+            }
+
+            // Display settlements
+            settlementsDiv.innerHTML = settlements.length === 0 ? 
+                '<div class="settlement-item">所有帳目已結清</div>' :
+                settlements.map(s => `
+                    <div class="settlement-item">
+                        <div>
+                            <span class="negative">${s.from}</span> 支付給 
+                            <span class="positive">${s.to}</span>
+                        </div>
+                        <div>¥${s.amount.toFixed(2)}</div>
+                    </div>
+                `).join('');
+        }
+    </script>
+</body>
+</html> 
