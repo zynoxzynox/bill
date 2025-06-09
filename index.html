@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分帳計算器</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-receipt"></i> 分帳計算器</h1>
+            <p>公平分攤朋友間的開支</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-users"></i> 新增人員</h2>
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-user"></i> 姓名</label>
+                    <input type="text" id="name" placeholder="請輸入姓名">
+                </div>
+                <button class="btn btn-primary" id="addPerson">
+                    <i class="fas fa-plus"></i> 新增人員
+                </button>
+                <div class="participant-list" id="peopleList"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-money-bill-wave"></i> 新增支出</h2>
+                <div class="form-group">
+                    <label for="payer"><i class="fas fa-user-circle"></i> 付款人</label>
+                    <select id="payer">
+                        <option value="">選擇付款人</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amount"><i class="fas fa-yen-sign"></i> 金額 (人民幣)</label>
+                    <input type="number" id="amount" placeholder="請輸入金額">
+                </div>
+                <div class="form-group">
+                    <label for="description">描述</label>
+                    <input type="text" id="description" placeholder="用於什麼項目？">
+                </div>
+                <div class="form-group">
+                    <label for="recipient">受益人</label>
+                    <select id="recipient">
+                        <option value="">選擇受益人</option>
+                    </select>
+                </div>
+                <button class="btn btn-success" id="addExpense">新增支出</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">支出明細</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>付款人</th>
+                        <th>金額</th>
+                        <th>描述</th>
+                        <th>受益人</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="expensesList"></tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">結算</h2>
+            <button class="btn btn-primary" id="calculate">計算結算金額</button>
+            <div id="summary"></div>
+            <div id="settlements"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
